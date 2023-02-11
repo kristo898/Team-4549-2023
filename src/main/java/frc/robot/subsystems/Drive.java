@@ -4,12 +4,10 @@
 
 package frc.robot.subsystems;
 
-
-
 import java.util.function.DoubleSupplier;
 
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_VictorSPX;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -20,91 +18,135 @@ import frc.robot.Constants.DriveConstants;
 
 public class Drive extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
-    WPI_VictorSPX frontRight = new WPI_VictorSPX(DriveConstants.krightDriveMotorPort);
-    WPI_VictorSPX backRight = new WPI_VictorSPX(DriveConstants.krightBackDriveMotorPort);
-    WPI_VictorSPX frontLeft = new WPI_VictorSPX(DriveConstants.kleftDriveMotorPort);
-    WPI_VictorSPX backLeft = new WPI_VictorSPX(DriveConstants.kleftBackDriveMotorPort);
-    MotorControllerGroup rightGroup = 
-      new MotorControllerGroup(
-        frontRight,
-        backRight
-        );
-    MotorControllerGroup leftGroup = 
-      new MotorControllerGroup(
-        frontLeft,
-        backLeft
+  /** Shooter Subsystem */
+  Shooter m_Shooter = new Shooter();
+  //Naming and constructing the Motor Group
+  /** Constants can be found in {@link DriveConstants} */
+  MotorControllerGroup rightGroup = new MotorControllerGroup(
+      new CANSparkMax(DriveConstants.frontRightPort, MotorType.kBrushless),
+      new CANSparkMax(DriveConstants.middleRightPort, MotorType.kBrushless),
+      new CANSparkMax(DriveConstants.backRightPort, MotorType.kBrushless)
       );
-    DifferentialDrive drive = new DifferentialDrive(rightGroup, leftGroup);
-    Timer autoTimer = new Timer();
-    public Drive() {
-      backRight.setNeutralMode(NeutralMode.Coast);
-      frontRight.setNeutralMode(NeutralMode.Coast);
-      backLeft.setNeutralMode(NeutralMode.Coast);
-      frontLeft.setNeutralMode(NeutralMode.Coast);
-      backRight.configFactoryDefault();
-      frontRight.configFactoryDefault();
-      backLeft.configFactoryDefault();
-      frontLeft.configFactoryDefault();
-      backRight.setSafetyEnabled(true);
-      frontRight.setSafetyEnabled(true);
-      backLeft.setSafetyEnabled(true);
-      frontLeft.setSafetyEnabled(true);
-      leftGroup.setInverted(true);
-      rightGroup.setInverted(false);
+    MotorControllerGroup leftGroup = new MotorControllerGroup(
+      new CANSparkMax(DriveConstants.frontLeftPort, MotorType.kBrushless),
+      new CANSparkMax(DriveConstants.middleLeftPort, MotorType.kBrushless),
+      new CANSparkMax(DriveConstants.backLeftPort, MotorType.kBrushless)
+      );
+  /** Naming and Constructing the Timer for auto */
+  Timer autoTimer = new Timer();
+  /**Naming and constructing the drive train*/
+  DifferentialDrive drive = new DifferentialDrive(rightGroup, leftGroup);
+  /** Drive Train Subsystem */
+  public Drive() {
+    //Setting Motor Inversion
+    rightGroup.setInverted(false);
+    leftGroup.setInverted(true);
   }
-  
+
   /**
-   * Drives the robot using arcade controls.
+   * Example command factory method.
    *
-   * @param fwd the commanded forward movement
-   * @param rot the commanded rotation
+   * @return a command
    */
-  public CommandBase arcadeDriveCommand(DoubleSupplier fwd, DoubleSupplier rot) {
-    return run(() -> drive.arcadeDrive(fwd.getAsDouble(), rot.getAsDouble())).withName("arcadeDrive");
+  /** Drives the Robot */
+  public CommandBase DriveCommand(DoubleSupplier fwd, DoubleSupplier rot) {
+    // Inline construction of command goes here.
+    
+   return run(() -> drive.arcadeDrive(fwd.getAsDouble(), rot.getAsDouble())).withName("arcadeDrive"); 
   }
+  /**Runs the Auto on the Blue Alliance Station 1 */
   public CommandBase LeftBlue(){
-    return runOnce(() -> autoTimer.reset()).withName("autoStarted")
-      /* .andThen(
-        run(() -> m_Shooter.shootCommand())
-      )*/
+    return runOnce(() -> autoTimer.reset()).withName("autoStart")
+      .andThen(
+        run(() -> m_Shooter.Fwdshoot())
+      ).withName("autoShoot")
       .andThen(
         run(() -> autoTimer.start()), 
         run(() -> drive.arcadeDrive(0.5, 0)), 
         run(() -> autoTimer.hasElapsed(1)),
-        run(() -> autoTimer.stop()))
+        run(() -> autoTimer.stop())).withName("autoStep1")
       .andThen(
         run(() -> autoTimer.start()),
         run(() -> drive.arcadeDrive(0, 0.5)),
         run(() -> autoTimer.hasElapsed(0.5)),
-        run(() -> autoTimer.stop()))
+        run(() -> autoTimer.stop())).withName("autoStep2")
       .andThen(
         run(() -> autoTimer.start()),
         run(() -> drive.arcadeDrive(0.5, 0)),
         run(() -> autoTimer.hasElapsed(3)),
-        run(() -> autoTimer.stop()))
+        run(() -> autoTimer.stop())).withName("autoStep3")
       .andThen(
         run(() -> autoTimer.start()),
         run(() -> drive.arcadeDrive(0, -0.5)),
         run(() -> autoTimer.hasElapsed(0.5)),
-        run(() -> autoTimer.stop()))
+        run(() -> autoTimer.stop())).withName("autoStep4")
       .andThen(
         run(() -> autoTimer.start()),
         run(() -> drive.arcadeDrive(0.5, 0)),
         run(() -> autoTimer.hasElapsed(2)),
-        run(() -> autoTimer.stop()))
+        run(() -> autoTimer.stop())).withName("autoStep4")
       .andThen(
         run(() -> autoTimer.start()),
         run(() -> drive.arcadeDrive(0, 0.5)),
         run(() -> autoTimer.hasElapsed(0.5)),
         run(() -> autoTimer.stop())
-      ).withName("autoEnd");
+      ).withName("autoStep5").withName("autoEnd");
   }
-  
+  /**Runs auto in front Blue Station 3*/
+  public CommandBase RightBlue(){
+    return runOnce(() -> autoTimer.reset())
+      .withName("autoStart")
+    .andThen(() -> m_Shooter.Fwdshoot())
+      .withName("autoShoot")
+    .andThen(
+      run(() -> autoTimer.start()),
+      run(() -> drive.arcadeDrive(0, 0)),
+      run(() -> autoTimer.hasElapsed(1)),
+      run(() -> autoTimer.stop())).withName("autoStep1")
+    .andThen(
+      run(() -> autoTimer.start()),
+      run(() -> drive.arcadeDrive(0, 0)),
+      run(() -> autoTimer.hasElapsed(1)),
+      run(() -> autoTimer.stop()).withName("autoStep2")
+    .andThen(
+      run(() -> autoTimer.start())
+      )
+      );
+  }
+  /**Runs auto in front Red 1*/
+  public CommandBase LeftRed(){
+    return runOnce(() -> autoTimer.reset())
+      .withName("autoStart")
+    .andThen(() -> m_Shooter.Fwdshoot())
+      .withName("autoShoot");
+  }
+  /**Runs auto in front Red 3*/
+  public CommandBase RightRed(){
+    return runOnce(() -> autoTimer.reset())
+      .withName("autoStart")
+    .andThen(() -> m_Shooter.Fwdshoot())
+      .withName("autoShoot");
+  }
+  /**Runs auto in front Red/Blue 2*/
+  public CommandBase Middle(){
+    return runOnce(() -> autoTimer.reset())
+      .withName("autoStart")
+    .andThen(() -> m_Shooter.Fwdshoot())
+      .withName("autoShoot");
+  }
+  /**
+   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+   *
+   * @return value of some boolean subsystem state, such as a digital sensor.
+   */
+  public boolean exampleCondition() {
+    // Query some boolean state, such as a digital sensor.
+    return false;
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    
   }
 
   @Override
