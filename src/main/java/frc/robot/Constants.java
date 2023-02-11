@@ -13,25 +13,20 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
-  /**Drive Constants*/
-  public static class DriveConstants {
-    public static final int frontRightPort = 1;
-    public static final int middleRightPort = 2;
-    public static final int backRightPort = 3;
-    public static final int frontLeftPort = 4;
-    public static final int middleLeftPort = 5;
-    public static final int backLeftPort = 6;
-  }
-  /**Shooter Constants*/
-  public static class ShooterConstants {
-    public static final int ShooterPort = 7;
-  }
-  /**Operator Constants*/
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
-  }
-  public static class PoleConstants{
-
-    public static final int poleMotorPort = 0;}
-  public static class AutonomousContants {}
+    public static final class OIConstants{
+        public static final int kDriverControllerPort = 0;
+    }
+    public static final class DriveConstants{
+        public static final int kleftDriveMotorPort = 1;
+        public static final int kleftBackDriveMotorPort = 2;
+        public static final int krightDriveMotorPort = 3;
+        public static final int krightBackDriveMotorPort = 4;
+    }
+    public static final class BeltConstants{
+        public static final int kBeltMotorPort = 12;
+    }
+    public static final class PoleConstants{
+        public static final int poleMotorPort = 8;
+    }
+    
 }
