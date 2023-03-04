@@ -53,6 +53,12 @@ public class Drive extends SubsystemBase {
   DifferentialDrive drive = new DifferentialDrive(rightGroup, leftGroup);
   /** Drive Train Subsystem */
   public Drive() {
+    frontLeft.restoreFactoryDefaults();
+    middleLeft.restoreFactoryDefaults();
+    backLeft.restoreFactoryDefaults();
+    frontRight.restoreFactoryDefaults();
+    middleRight.restoreFactoryDefaults();
+    backRight.restoreFactoryDefaults();
     //Returns to the driver station Motor Controller Voltages
     frontLeft.getBusVoltage();
     middleLeft.getBusVoltage();
