@@ -38,6 +38,28 @@ public class Drive extends SubsystemBase {
   DifferentialDrive drive = new DifferentialDrive(rightGroup, leftGroup);
   /** Drive Train Subsystem */
   public Drive() {
+     // retun motor voltage
+    frontLeft.getBusVoltage();
+    middleLeft.getBusVoltage();
+    backLeft.getBusVoltage();
+    frontRight.getBusVoltage();
+    middleRight.getBusVoltage();
+    backRight.getBusVoltage();
+    // retun motor tempmpre
+    frontLeft.getMotorTemperature();
+    frontLeft.getMotorTemperature();
+    middleLeft.getMotorTemperature();
+    backLeft.getMotorTemperature();
+    frontRight.getMotorTemperature();
+    middleRight.getMotorTemperature();
+    backLeft.getMotorTemperature();
+    // retun motor amp
+    frontLeft.getOutputCurrent();
+    middleLeft.getOutputCurrent();
+    backLeft.getOutputCurrent();
+    frontRight.getOutputCurrent();
+    middleRight.getOutputCurrent();
+    backRight.getOutputCurrent();
     //Setting Motor Inversion
     rightGroup.setInverted(false);
     leftGroup.setInverted(true);
