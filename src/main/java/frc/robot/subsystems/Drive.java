@@ -8,8 +8,10 @@ package frc.robot.subsystems;
 import java.util.function.DoubleSupplier;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMax.FaultID;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+//import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
@@ -42,9 +44,10 @@ public class Drive extends SubsystemBase {
    DifferentialDrive drive = new DifferentialDrive(rightGroup, leftGroup);
    Timer autoTimer = new Timer();
     boolean InvertMyDrive;
-  /** Creates a new Drive. */
+   // SlewRateLimiter filter = new SlewRateLimiter(.5, 0.5, 0.5);
+    /** Creates a new Drive. */
   public Drive() {
-     // restores to defaults
+    // restores to defaults
     frontLeft.restoreFactoryDefaults();
     middleLeft.restoreFactoryDefaults();
     backLeft.restoreFactoryDefaults();
@@ -85,7 +88,8 @@ public class Drive extends SubsystemBase {
     {
      rightGroup.setInverted(false);
      leftGroup.setInverted(true);
-    }/* */
+    }
+   // filter.calculate(0);
     // setts currentlimit 
     frontLeft.setSmartCurrentLimit(60);
     middleLeft.setSmartCurrentLimit(60);
@@ -121,8 +125,9 @@ public class Drive extends SubsystemBase {
    * @return arcadeDriveCommand
   */
   public CommandBase arcadeDriveCommand(DoubleSupplier fwd, DoubleSupplier rot) {
-    return run(() -> drive.arcadeDrive(fwd.getAsDouble(), rot.getAsDouble())).withName("arcadedrive");
+    return run(() -> drive.arcadeDrive((fwd.getAsDouble()), (rot.getAsDouble()))).withName("arcadedrive");
   }
+
   /**  Auto Blue Alliance Station 1 */
   public CommandBase LeftBlue(){
     return  runOnce(() -> autoTimer.reset()).withName("autoStarted")
