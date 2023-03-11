@@ -44,6 +44,13 @@ public class Drive extends SubsystemBase {
     boolean InvertMyDrive;
   /** Creates a new Drive. */
   public Drive() {
+     // restores to defaults
+    frontLeft.restoreFactoryDefaults();
+    middleLeft.restoreFactoryDefaults();
+    backLeft.restoreFactoryDefaults();
+    frontRight.restoreFactoryDefaults();
+    middleRight.restoreFactoryDefaults();
+    backRight.restoreFactoryDefaults();
     // return motor voltage
     frontLeft.getBusVoltage();
     middleLeft.getBusVoltage();
@@ -79,6 +86,34 @@ public class Drive extends SubsystemBase {
      rightGroup.setInverted(false);
      leftGroup.setInverted(true);
     }/* */
+    // setts currentlimit 
+    frontLeft.setSmartCurrentLimit(60);
+    middleLeft.setSmartCurrentLimit(60);
+    backLeft.setSmartCurrentLimit(60);
+    frontRight.setSmartCurrentLimit(60);
+    middleRight.setSmartCurrentLimit(60);
+    backRight.setSmartCurrentLimit(60);
+    //burns flash 
+    frontLeft.burnFlash();
+    middleLeft.burnFlash();
+    backLeft.burnFlash();
+    frontRight.burnFlash();
+    middleRight.burnFlash();
+    backRight.burnFlash();
+    //checks for faultsa
+    frontLeft.getFault(FaultID.kOvercurrent);
+    frontLeft.getFaults();
+    middleLeft.getFault(FaultID.kOvercurrent);
+    middleLeft.getFaults();
+    backLeft.getFault(FaultID.kOvercurrent);
+    backLeft.getFaults();
+    frontRight.getFault(FaultID.kOvercurrent);
+    frontRight.getFaults();
+    middleRight.getFault(FaultID.kOvercurrent);
+    middleRight.getFaults();
+    backRight.getFault(FaultID.kOvercurrent);
+    backRight.getFaults();
+
   }
   /** Arcade Drive 
    * @param fwd commanded forward movement
